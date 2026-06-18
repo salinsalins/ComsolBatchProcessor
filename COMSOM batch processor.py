@@ -306,7 +306,7 @@ def process_imports(variant:Variant):
             variant.add_error(print_except_info("Imports ERROR"))
             LOGGER.error("Imports ERROR", exc_info=True)
 
-def process_node_toggless(variant:Variant):
+def process_node_toggles(variant:Variant):
     nodes = variant.get("nodes", [])
     if isinstance(nodes, dict):
         nodes = [nodes]
@@ -683,7 +683,7 @@ for variant in variants_expanded:
         change_file(variant)
 
         t1 = time.time()
-        process_node_toggless(variant)
+        process_node_toggles(variant)
         dt[0] = time.time() - t1
 
         t1 = time.time()
