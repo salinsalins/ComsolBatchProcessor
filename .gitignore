@@ -1,0 +1,7 @@
+/.venv/
+/.idea/
+/*.json
+/.vscode/
+_pycache_/
+*.pyc
+*.code-workspace
