@@ -5,6 +5,8 @@ import mph
 from open_file import open_directory
 from pathlib import Path
 
+SIZE_LIMIT=150000000
+
 def except_info(prefix='Exception:'):
     exc_type, exc_value, exc_traceback = sys.exc_info()
     return f'{prefix} {exc_type} {exc_value}'
@@ -57,20 +59,26 @@ if recur:
 else:
     files = Path(file_dir).glob('*.mph')
 length = 0
-size_in_bytes = 0
-files = list(files)
+tota_size_in_bytes = 0
+files_all = list(files)
 sizes = []
-for file in files:
+files = []
+for file in files_all:
     length += 1
-    sizes.append(file.stat().st_size)
-    size_in_bytes += sizes[-1]
-    print(f'{length:4d} "{file}" {sizes[-1]:_d} bytes')
+    size = file.stat().st_size
+    if size > SIZE_LIMIT:
+        files.append(file)
+        sizes.append(size)
+        tota_size_in_bytes += size
+        print(f'{length:4d} "{file}" {size:_d} bytes')
+    else:
+        print(f'{length:4d} "{file}" {size:_d} bytes is smal')
 
-if length <= 0:
-    print('No *.mph files found')
+if len(files) <= 0:
+    print('No *.mph files to process')
     exit(1)
 
-print(f'Total {named_int(size_in_bytes)} bytes in {len(files)} files')
+print(f'Total {named_int(tota_size_in_bytes)} bytes in {len(files)} files')
 
 key = input(f'Press Y<CR> to Squeeze {len(files)} files ')
 if key != 'Y':
@@ -102,14 +110,14 @@ for file in files:
         new_size_in_bytes += new_size
         porocessed_in_bytes += sizes[n]
         print(f'{sizes[n]:_d} -> {new_size:_d}; removed {named_int(sizes[n] - new_size)} bytes')
-        print(f'{int(porocessed_in_bytes * 100. / size_in_bytes):_d}% completed {nice_time(time.time()-t0)} elapsed')
+        print(f'{int(porocessed_in_bytes * 100. / tota_size_in_bytes):_d}% completed {nice_time(time.time()-t0)} elapsed')
         n += 1
     except:
         n_errors += 1
         print(except_info(f'Error processing file "{file}"'))
 print(f'Resulting:')
 print(n, 'files processed OK,', n_errors, 'with errors.')
-print(f'Total {named_int(size_in_bytes)} bytes processed.')
+print(f'Total {named_int(tota_size_in_bytes)} bytes processed.')
 print(f'Total {named_int(new_size_in_bytes)} bytes in result.')
-print(f'{named_int(size_in_bytes - new_size_in_bytes)} bytes squeezed.')
+print(f'{named_int(tota_size_in_bytes - new_size_in_bytes)} bytes squeezed.')
 print(f'{nice_time(time.time()-t0)} elapsed.')
