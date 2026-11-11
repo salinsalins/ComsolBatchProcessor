@@ -92,10 +92,10 @@ vy = vy[nonnan]
 vz = vz[nonnan]
 
 # rotate to angle of single line injection
-fi0 = 1.5 / 180. * np.pi
+fi0 = 1.5 / 180. * np.pi # 1.5 degreese
 cfi = np.cos(fi0)
 sfi = np.sin(fi0)
-z0 = 12690
+z0 = 12690.          # mm
 
 z2 = z - z0
 
